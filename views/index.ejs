@@ -1,0 +1,43 @@
+<div class="container">
+    <%- include('layouts/navbar') %>
+    <form action="/" method="get">
+        <div class="input-group mb-3 w-50">
+            <% let s = locals.keyword || '' %>
+            <input type="text" name="keyword" class="form-control" value="<%= s %>">
+            <button type="submit" class="btn btn-outline-primary">Search</button>
+        </div>
+    </form>
+    <% let column = ['#', 'Type', 'Name', 'HP', 'STR', 'TEC', 'WLK', 'FLY', 'TGH', 'Cost'] %>
+    <table class="search-table table">
+        <thead>
+            <tr>
+                <% for(let v of column){ %>
+                    <th><%= v %></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody>
+            <% if(locals.data && locals.data.length > 0){ %>
+                <% let i = 1 %>
+                <% for(let row of data){ %>
+                    <tr>
+                        <td><%= i++ %></td>
+                        <td><%= row.type %></td>
+                        <td><%= row.name %></td>
+                        <td><%= row.hp %></td>
+                        <td><%= row.str %></td>
+                        <td><%= row.tec %></td>
+                        <td><%= row.wlk %></td>
+                        <td><%= row.fly %></td>
+                        <td><%= row.tgh %></td>
+                        <td><%= row.cost %></td>
+                    </tr>
+                <% } %>
+            <% }else{ %>
+                <tr>
+                    <td colspan="<%= column.length %>" class="text-center">No data found!</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,20 @@
+<footer class="text-center">
+    &copy; <%= new Date().getFullYear() + ' - All right reserved.' %>
+</footer>
+
+<script>
+    window.onload = function(){
+        floatingMessage('<%= locals.message ? message : "" %>')
+    }
+
+    function floatingMessage(msg){
+        let fm = document.getElementById('floating-message')
+        if(fm && msg != ''){
+            fm.parentElement.querySelector('strong').textContent = msg
+            fm.classList.add('show')
+            setTimeout(function(){
+                fm.classList.remove('show')
+            }, 4000)
+        }
+    }
+</script>
