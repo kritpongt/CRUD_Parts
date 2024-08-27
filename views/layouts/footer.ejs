@@ -10,6 +10,10 @@
         if(btn_edit){
             btn_edit.onclick = function(){ editPart() }
         }
+        let btn_del = document.getElementById('btn-del')
+        if(btn_del){
+            btn_del.onclick = function(){ delPart() }
+        }
     }
 
     function floatingMessage(msg){
@@ -35,14 +39,25 @@
     }
 
     function delPart(){
-        // axios({
-        //     url: '/edit-multi',
-        //     method: 'post',
-        //     data: { arr_id: arr_cb },
-        //     timeout: 3000
-        // }).catch(function(err){
-        //     floatingMessage(err)
-        // })
+        let cb = document.querySelectorAll('input[name="cb"]:checked')
+        let arr_cb = Array.from(cb, function(v){ return v.value })
+        let msg = ''
+        if(arr_cb.length > 0){
+            axios({
+                url: '/del',
+                method: 'post',
+                data: { id: arr_cb.join(',') },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                timeout: 3000
+            }).then(function(response){
+                window.location.reload()
+            }).catch(function(error){
+                msg = error
+            })
+        }else{
+            msg = 'Please select parts before delete!'
+        }
+        floatingMessage(msg)
     }
 
     function createForm(obj){

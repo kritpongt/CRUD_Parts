@@ -3,6 +3,7 @@ const ejs = require('ejs')
 const ejsLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
 const db_part = require('./model')
+const session = require('express-session')
 const helper = require('./helper')
 
 const app = express()
@@ -12,6 +13,11 @@ app.set('layout', './layouts/main')
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'))
 app.use('/axios', express.static(__dirname + '/node_modules/axios/dist'))
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(session({
+    secret: 'SECRET_ID',
+    resave: false,
+    saveUninitialized: false
+}))
 
 app.get('/', async function(request, response){
     let where = request.query.keyword || '';
@@ -20,12 +26,14 @@ app.get('/', async function(request, response){
 })
 
 app.all('/add', async function(request, response){
+    let msg = request.session.message
+    request.session.message = null
     let fetch = await db_part.Type.fetchAll()
     if(!request.body.name){
-        response.render('add', { helper: helper, type: fetch })
+        response.render('add', { helper: helper, type: fetch, message: msg  })
     }else{
-        let form = request.body
-        let ins = {
+        const form = request.body
+        const ins = {
             type: form.type || '',
             name: form.name || '',
             hp: form.hp || 0,
@@ -37,19 +45,21 @@ app.all('/add', async function(request, response){
             cost: form.cost || 0,
             special: form.special || []
         }
-        db_part.Part.create(ins).then(function(){
-            response.render('add', { helper: helper, type: data, message: 'Item added' })
+        await db_part.Part.create(ins).then(function(){
+            request.session.message = 'Item added'
         }).catch(function(err){
-            // response.send(err)
-            response.render('add', { helper: helper, type: data, message: err })
+            request.session.message = err.message
         })
+        response.redirect('/add')
     }
 })
 
 app.get('/edit', async function(request, response){
+    let msg = request.session.message
+    request.session.message = null
     let where = request.query.keyword || '';
     let fetch = await db_part.Part.fetchDataByKeyword(where)
-    response.render('edit', { keyword: where, data: fetch })
+    response.render('edit', { keyword: where, data: fetch, message: msg })
 })
 
 app.get('/edit/:id', function(request, response){
@@ -63,6 +73,7 @@ app.post('/edit-multi', async function(request, response){
         let id = request.body.id
         if(id){
             const arr_id = id.split(',')
+            // response.send(arr_id)
             let fetch = await db_part.Part.find({ _id: { $in: arr_id } }).exec()
             response.render('edit-multi', { data: fetch })
         }else{
@@ -90,15 +101,28 @@ app.post('/edit-multi', async function(request, response){
                 }
             }
         })
-        let result = await db_part.Part.bulkWrite(upd).then(function(result){
-            return result.modifiedCount
+        await db_part.Part.bulkWrite(upd).then(function(result){
+            request.session.message = `Update ${result.modifiedCount} items, successful`
+        }).catch(function(err){
+            request.session.message = `Update error: ${err}`
         })
-        if(result > 0){
-            response.redirect('/edit')
-        }else{
-
-        }
+        response.redirect('/edit')
     }
+})
+
+app.post('/del', async function(request, response){
+    let id = request.body.id
+    let msg = ''
+    if(request.xhr || request.headers.accept.indexOf('json') > -1){
+        const arr_id = id.split(',')
+        await db_part.Part.deleteMany({ _id: { $in: arr_id } }).then(function(result){
+            msg = `Delete ${result.deletedCount} items!`
+        }).catch(function(err){
+            msg = err
+        })
+        request.session.message = msg
+    }
+    response.end()
 })
 
 app.listen(3000, function(){
