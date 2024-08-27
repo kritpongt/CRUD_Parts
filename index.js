@@ -10,6 +10,7 @@ app.set('view engine', 'ejs')
 app.use(ejsLayouts)
 app.set('layout', './layouts/main')
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'))
+app.use('/axios', express.static(__dirname + '/node_modules/axios/dist'))
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/', async function(request, response){
@@ -19,9 +20,9 @@ app.get('/', async function(request, response){
 })
 
 app.all('/add', async function(request, response){
-    let data = await db_part.Type.fetchAll()
+    let fetch = await db_part.Type.fetchAll()
     if(!request.body.name){
-        response.render('add', { helper: helper, type: data })
+        response.render('add', { helper: helper, type: fetch })
     }else{
         let form = request.body
         let ins = {
@@ -53,17 +54,52 @@ app.get('/edit', async function(request, response){
 
 app.get('/edit/:id', function(request, response){
     let id = request.params.id || ''
-    if(id == ''){
+    response.send(id)
+})
+
+app.post('/edit-multi', async function(request, response){
+    let confirm = request.query.confirm || ''
+    if(confirm != '1'){
+        let id = request.body.id
+        if(id){
+            const arr_id = id.split(',')
+            let fetch = await db_part.Part.find({ _id: { $in: arr_id } }).exec()
+            response.render('edit-multi', { data: fetch })
+        }else{
+            response.redirect('/edit')
+        }
+    }else{
+        const obj_record = request.body
+        const upd = Object.values(obj_record).map(function(record){
+            return {
+                updateOne: {
+                    filter: { _id: record.id },
+                    update: {
+                        $set: {
+                            type: record.type,
+                            name: record.name,
+                            hp: record.hp,
+                            str: record.str,
+                            tec: record.tec,
+                            wlk: record.wlk,
+                            fly: record.fly,
+                            tgh: record.tgh,
+                            cost: record.cost,
+                        }
+                    }
+                }
+            }
+        })
+        let result = await db_part.Part.bulkWrite(upd).then(function(result){
+            return result.modifiedCount
+        })
+        if(result > 0){
+            response.redirect('/edit')
+        }else{
+
+        }
     }
 })
-
-app.post('/edit-multi', function(request, response){
-
-})
-
-// app.all('/edit-part', function(request, response){
-
-// })
 
 app.listen(3000, function(){
     console.log('Server is started, on port: 3000')

@@ -7,8 +7,8 @@
         floatingMessage('<%= locals.message ? message : "" %>')
 
         let btn_edit = document.getElementById('btn-edit')
-        btn_edit.onclick = function(){
-            editPart()
+        if(btn_edit){
+            btn_edit.onclick = function(){ editPart() }
         }
     }
 
@@ -25,10 +25,44 @@
 
     function editPart(){
         let cb = document.querySelectorAll('input[name="cb"]:checked')
-        console.log(Array.from(cb))
+        let arr_cb = Array.from(cb, function(v){ return v.value })
+        if(arr_cb.length == 1){
+            window.location.href = '/edit/' + arr_cb[0]
+        }else{
+            const data = { id: arr_cb.join(',') }
+            createForm(data)
+        }
     }
 
     function delPart(){
+        // axios({
+        //     url: '/edit-multi',
+        //     method: 'post',
+        //     data: { arr_id: arr_cb },
+        //     timeout: 3000
+        // }).catch(function(err){
+        //     floatingMessage(err)
+        // })
+    }
 
+    function createForm(obj){
+        const exsitingForm = document.getElementById('dynamic-form')
+        if(exsitingForm){ exsitingForm.remove() }
+
+        const form = document.createElement('form')
+        form.id = 'dynamic-form'
+        form.action = '/edit-multi'
+        form.method = 'post'
+
+        for(const [key, value] of Object.entries(obj)){
+            const input = document.createElement('input')
+            input.type = 'hidden'
+            input.name = key
+            input.value = value
+            form.appendChild(input)
+        }
+
+        document.body.appendChild(form)
+        form.submit()
     }
 </script>

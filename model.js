@@ -30,15 +30,15 @@ partSchema.statics.fetchDataByKeyword = function(where){
 }
 const Part = mongoose.model('Part', partSchema)
 
-const typeSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-})
-
-typeSchema.statics.fetchAll = function(){
-    return this.find().exec().then(function(docs){
-        return docs
-    })
-}
+const typeSchema = new mongoose.Schema({ name: { type: String, required: true } },
+    {
+        statics: {
+            fetchAll(){
+                return this.find().exec()
+            }
+        }
+    }
+)
 const Type = mongoose.model('Type', typeSchema)
 Type.countDocuments().then(function(count){
     if(count === 0){
