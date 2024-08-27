@@ -9,6 +9,7 @@ npm i axios bootstrap@5.3
 > - ~~edit page~~
 > - edit one
 > - table paginate
+> - alert confirm edit/del
 > - ~~use session diaplay message~~
 > - class table
 
