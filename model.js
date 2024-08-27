@@ -18,9 +18,27 @@ const partSchema = new mongoose.Schema({
     special: { type: Array }
 })
 
+partSchema.statics.fetchDataByKeyword = function(where){
+    return this.find({
+        $or: [
+            { type: { $regex: where, $options: 'i' } },
+            { name: { $regex: where, $options: 'i' } }
+        ]
+    }).select('type name hp str tec wlk fly tgh cost').exec().then(function(docs){
+        return docs
+    })
+}
+const Part = mongoose.model('Part', partSchema)
+
 const typeSchema = new mongoose.Schema({
     name: { type: String, required: true },
 })
+
+typeSchema.statics.fetchAll = function(){
+    return this.find().exec().then(function(docs){
+        return docs
+    })
+}
 const Type = mongoose.model('Type', typeSchema)
 Type.countDocuments().then(function(count){
     if(count === 0){
@@ -42,6 +60,6 @@ Type.countDocuments().then(function(count){
 })
 
 module.exports = {
-    Part: mongoose.model('Part', partSchema),
+    Part: Part,
     Type: Type
 }

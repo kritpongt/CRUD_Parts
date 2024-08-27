@@ -10,7 +10,7 @@
     <table class="search-table table">
         <thead>
             <tr>
-                <th><a href="">Edit</a> / <a href="">Del</a></th>
+                <th><a href="#" id="btn-edit">Edit</a> / <a href="#" id="btn-del">Del</a></th>
                 <% for(let v of column){ %>
                     <th><%= v %></th>
                 <% } %>
@@ -18,10 +18,10 @@
         </thead>
         <tbody>
             <% if(locals.data && locals.data.length > 0){ %>
-                <% let i = 1 %>
+                <% let i = 1; %>
                 <% for(let row of data){ %>
                     <tr>
-                        <td><%= i++ %></td>
+                        <td class="text-center"><input type="checkbox" name="cb" value="<%= row._id %>" class="form-check-input"></td>
                         <td><%= row.type %></td>
                         <td><%= row.name %></td>
                         <td><%= row.hp %></td>

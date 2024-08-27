@@ -5,6 +5,11 @@
 <script>
     window.onload = function(){
         floatingMessage('<%= locals.message ? message : "" %>')
+
+        let btn_edit = document.getElementById('btn-edit')
+        btn_edit.onclick = function(){
+            editPart()
+        }
     }
 
     function floatingMessage(msg){
@@ -16,5 +21,14 @@
                 fm.classList.remove('show')
             }, 4000)
         }
+    }
+
+    function editPart(){
+        let cb = document.querySelectorAll('input[name="cb"]:checked')
+        console.log(Array.from(cb))
+    }
+
+    function delPart(){
+
     }
 </script>
