@@ -1,0 +1,44 @@
+<div class="container">
+    <%- include('layouts/navbar') %>
+    <form action="/edit-multi/?confirm=1" method="post" class="mb-3">
+        <% let column = ['#', 'Type', 'Name', 'HP', 'STR', 'TEC', 'WLK', 'FLY', 'TGH', 'Cost'] %>
+        <table class="search-table table">
+            <thead>
+                <tr>
+                    <% for(let v of column){ %>
+                        <th><%= v %></th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(locals.data && locals.data.length > 0){ %>
+                    <% let i = 0 %>
+                    <% for(let row of data){ %>
+                        <% i++ %>
+                        <tr>
+                            <td><%= i %></td>
+                            <td class="d-none"><input type="hidden" name="r<%= i %>[id]" value="<%= row._id %>" class="form-control"></td>
+                            <td><input type="text" name="r<%= i %>[type]" value="<%= row.type %>" class="form-control"></td>
+                            <td><input type="text" name="r<%= i %>[name]" value="<%= row.name %>" class="form-control"></td>
+                            <td><input type="number" name="r<%= i %>[hp]" value="<%= row.hp %>" class="form-control"></td>
+                            <td><input type="number" name="r<%= i %>[str]" value="<%= row.str %>" class="form-control"></td>
+                            <td><input type="number" name="r<%= i %>[tec]" value="<%= row.tec %>" class="form-control"></td>
+                            <td><input type="number" name="r<%= i %>[wlk]" value="<%= row.wlk %>" class="form-control"></td>
+                            <td><input type="number" name="r<%= i %>[fly]" value="<%= row.fly %>" class="form-control"></td>
+                            <td><input type="number" name="r<%= i %>[tgh]" value="<%= row.tgh %>" class="form-control"></td>
+                            <td><input type="number" name="r<%= i %>[cost]" value="<%= row.cost %>" class="form-control"></td>
+                        </tr>
+                    <% } %>
+                <% }else{ %>
+                    <tr>
+                        <td colspan="<%= column.length + 1 %>" class="text-center">No data found!</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <div class="text-center">
+            <button type="submit" class="btn btn-outline-primary">Submit</button>
+            <button type="button" onclick="window.history.back()" class="btn btn-secondary">Back</button>
+        </div>
+    </form>
+</div>
