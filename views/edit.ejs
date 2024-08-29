@@ -1,8 +1,9 @@
 <div class="container">
     <%- include('layouts/navbar') %>
-    <form>
+    <form action="/edit">
         <div class="input-group mb-3 w-50">
-            <input type="text" class="form-control">
+            <% let s = locals.keyword || '' %>
+            <input type="text" name="keyword" class="form-control" value="<%= s %>">
             <button class="btn btn-outline-primary">Search</button>
         </div>
     </form>

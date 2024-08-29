@@ -73,7 +73,6 @@ app.post('/edit-multi', async function(request, response){
         let id = request.body.id
         if(id){
             const arr_id = id.split(',')
-            // response.send(arr_id)
             let fetch = await db_part.Part.find({ _id: { $in: arr_id } }).exec()
             response.render('edit-multi', { data: fetch })
         }else{
@@ -112,15 +111,13 @@ app.post('/edit-multi', async function(request, response){
 
 app.post('/del', async function(request, response){
     let id = request.body.id
-    let msg = ''
     if(request.xhr || request.headers.accept.indexOf('json') > -1){
         const arr_id = id.split(',')
         await db_part.Part.deleteMany({ _id: { $in: arr_id } }).then(function(result){
-            msg = `Delete ${result.deletedCount} items!`
+            request.session.message = `Delete ${result.deletedCount} items!`
         }).catch(function(err){
-            msg = err
+            response.send(err)
         })
-        request.session.message = msg
     }
     response.end()
 })
