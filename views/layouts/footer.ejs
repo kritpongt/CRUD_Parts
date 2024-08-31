@@ -53,7 +53,9 @@
                 window.location.reload()
             }).catch(function(err){
                 msg = err
+                handleLoadingOverlay('off')
             })
+            handleLoadingOverlay('on')
         }else{
             msg = 'Please select parts before delete!'
         }
@@ -79,5 +81,21 @@
 
         document.body.appendChild(form)
         form.submit()
+    }
+
+    function handleLoadingOverlay(sw){
+        const lo = document.getElementsByClassName('loading-overlay')
+        if(lo.length == 1){
+            let display = ''
+            switch(sw){
+                case 'on':
+                    display = 'flex'
+                    break
+                case 'off':
+                    display = 'none'
+                    break
+            }
+            lo[0].style.display = display
+        }
     }
 </script>

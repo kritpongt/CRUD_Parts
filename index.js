@@ -111,15 +111,17 @@ app.post('/edit-multi', async function(request, response){
 
 app.post('/del', async function(request, response){
     let id = request.body.id
-    if(request.xhr || request.headers.accept.indexOf('json') > -1){
-        const arr_id = id.split(',')
-        await db_part.Part.deleteMany({ _id: { $in: arr_id } }).then(function(result){
-            request.session.message = `Delete ${result.deletedCount} items!`
-        }).catch(function(err){
-            response.send(err)
-        })
-    }
-    response.end()
+    setTimeout(async function(){ //set delay
+        if(request.xhr || request.headers.accept.indexOf('json') > -1){
+            const arr_id = id.split(',')
+            await db_part.Part.deleteMany({ _id: { $in: arr_id } }).then(function(result){
+                request.session.message = `Delete ${result.deletedCount} items!`
+            }).catch(function(err){
+                response.send(err)
+            })
+        }
+        response.end()
+    }, 1000 + (Math.floor(Math.random() * 999) + 1))
 })
 
 app.listen(3000, function(){
