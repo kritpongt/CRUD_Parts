@@ -2,6 +2,9 @@
     &copy; <%= new Date().getFullYear() + ' - All right reserved.' %>
 </footer>
 
+<script src="/vue/vue.global.js"></script>
+<script src="/element-plus/index.full.min.js"></script>
+<script src="/public/js/vue-app.js"></script>
 <script>
     window.onload = function(){
         floatingMessage('<%= locals.message ? message : "" %>')
@@ -10,10 +13,10 @@
         if(btn_edit){
             btn_edit.onclick = function(){ editPart() }
         }
-        let btn_del = document.getElementById('btn-del')
-        if(btn_del){
-            btn_del.onclick = function(){ delPart() }
-        }
+        // let btn_del = document.getElementById('btn-del')
+        // if(btn_del){
+        //     btn_del.onclick = function(){ delPart() }
+        // }
     }
 
     function floatingMessage(msg){
@@ -57,7 +60,7 @@
             })
             handleLoadingOverlay('on')
         }else{
-            msg = 'Please select parts before delete!'
+            msg = 'Please select at least 1 parts before delete!'
         }
         floatingMessage(msg)
     }
@@ -97,9 +100,5 @@
             }
             lo[0].style.display = display
         }
-    }
-
-    function alertPopup(msg = ''){
-
     }
 </script>

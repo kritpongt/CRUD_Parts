@@ -11,7 +11,7 @@
     <table class="search-table table">
         <thead>
             <tr>
-                <th class="text-center"><a href="#" id="btn-edit">Edit</a> / <a href="#" id="btn-del">Del</a></th>
+                <th class="text-center"><a href="#" id="btn-edit">Edit</a> / <span id="btn-del-container"><a href="#" @click="open">Del</a></span></th>
                 <% for(let v of column){ %>
                     <th><%= v %></th>
                 <% } %>

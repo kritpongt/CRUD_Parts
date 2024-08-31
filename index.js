@@ -10,8 +10,10 @@ const app = express()
 app.set('view engine', 'ejs')
 app.use(ejsLayouts)
 app.set('layout', './layouts/main')
+app.use('/public', express.static(__dirname + '/public'))
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'))
-app.use('/stacks', express.static(__dirname + '/node_modules/@stackoverflow/stacks/dist'))
+app.use('/vue', express.static(__dirname + '/node_modules/vue/dist'))
+app.use('/element-plus', express.static(__dirname + '/node_modules/element-plus/dist'))
 app.use('/axios', express.static(__dirname + '/node_modules/axios/dist'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
@@ -112,7 +114,7 @@ app.post('/edit-multi', async function(request, response){
 
 app.post('/del', async function(request, response){
     let id = request.body.id
-    setTimeout(async function(){ //set delay
+    setTimeout(async function(){
         if(request.xhr || request.headers.accept.indexOf('json') > -1){
             const arr_id = id.split(',')
             await db_part.Part.deleteMany({ _id: { $in: arr_id } }).then(function(result){
