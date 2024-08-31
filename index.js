@@ -11,6 +11,7 @@ app.set('view engine', 'ejs')
 app.use(ejsLayouts)
 app.set('layout', './layouts/main')
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'))
+app.use('/stacks', express.static(__dirname + '/node_modules/@stackoverflow/stacks/dist'))
 app.use('/axios', express.static(__dirname + '/node_modules/axios/dist'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({

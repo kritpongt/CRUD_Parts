@@ -2,7 +2,7 @@
 ```
 npm init
 npm install nodemon express ejs express-ejs-layouts mongoose express-session
-npm i axios bootstrap@5.3 @stackoverflow/stacks
+npm i axios bootstrap@5.3
 ```
 
 > ## todo list
