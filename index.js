@@ -64,7 +64,7 @@ app.get('/edit', async function(request, response){
 
 app.get('/edit/:id', function(request, response){
     let id = request.params.id || ''
-    response.send(id)
+    response.send(`${id}<br><br>This page is not available!`)
 })
 
 app.post('/edit-multi', async function(request, response){

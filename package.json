@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@stackoverflow/stacks": "^2.5.7",
     "axios": "^1.7.5",
     "bootstrap": "5.3",
     "ejs": "^3.1.10",
