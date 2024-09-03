@@ -2,7 +2,7 @@
     <%- include('layouts/navbar') %>
     <form action="/">
         <div class="input-group mb-3 w-50">
-            <% let s = locals.keyword || '' %>
+            <% let s = locals.data.q_string.keyword || '' %>
             <input type="text" name="keyword" class="form-control" value="<%= s %>">
             <button type="submit" class="btn btn-outline-primary">Search</button>
         </div>
@@ -17,11 +17,10 @@
             </tr>
         </thead>
         <tbody>
-            <% if(locals.data && locals.data.length > 0){ %>
-                <% let i = 1 %>
-                <% for(let row of data){ %>
+            <% if(locals.data.data && locals.data.data.length > 0){ %>
+                <% for(let row of data.data){ %>
                     <tr>
-                        <td><%= i++ %></td>
+                        <td><%= row.no %></td>
                         <td><%= row.type %></td>
                         <td><%= row.name %></td>
                         <td><%= row.hp %></td>
@@ -40,4 +39,11 @@
             <% } %>
         </tbody>
     </table>
+    <nav class="d-flex justify-content-center">
+        <ul class="pagination">
+            <% for(let v of data.pagination){ %>
+                <li class="page-item"><%- v %></li>
+            <% } %>
+        </ul>
+    </nav>
 </div>

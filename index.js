@@ -24,8 +24,14 @@ app.use(session({
 
 app.get('/', async function(request, response){
     let where = request.query.keyword || '';
-    let fetch = await db_part.Part.fetchDataByKeyword(where)
-    response.render('index', { helper: helper, keyword: where, data: fetch })
+    let page = request.query.page || 1;
+    let fetch = await db_part.Part.fetchDataByKeyword(where, page)
+    let data = {
+        q_string: { keyword: where },
+        pagination: helper.genPagination(fetch[0].pagination[0], request.path + '?keyword=' + where),
+        data: fetch[0].data
+    }
+    response.render('index', { helper: helper, data: data })
 })
 
 app.all('/add', async function(request, response){
@@ -61,8 +67,14 @@ app.get('/edit', async function(request, response){
     let msg = request.session.message
     request.session.message = null
     let where = request.query.keyword || '';
-    let fetch = await db_part.Part.fetchDataByKeyword(where)
-    response.render('edit', { keyword: where, data: fetch, message: msg })
+    let page = request.query.page || 1;
+    let fetch = await db_part.Part.fetchDataByKeyword(where, page)
+    let data = {
+        q_string: { keyword: where },
+        pagination: helper.genPagination(fetch[0].pagination[0], request.path + '?keyword=' + where),
+        data: fetch[0].data
+    }
+    response.render('edit', { helper: helper, data: data, message: msg })
 })
 
 app.get('/edit/:id', function(request, response){

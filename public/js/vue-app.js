@@ -15,10 +15,10 @@ const btn_del = createApp({
             ).then(() => {
                 delPart()
             }).catch(() => {
-                // ElMessage({
-                //     type: 'info',
-                //     message: 'Delete canceled',
-                // })
+                ElMessage({
+                    type: 'info',
+                    message: 'Delete canceled',
+                })
             })
         }
         return {
