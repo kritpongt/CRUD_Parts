@@ -69,6 +69,7 @@ app.get('/edit', async function(request, response){
     let where = request.query.keyword || '';
     let page = request.query.page || 1;
     let fetch = await db_part.Part.fetchDataByKeyword(where, page)
+    // response.send(typeof(fetch[0].pagination[0]))
     let data = {
         q_string: { keyword: where },
         pagination: helper.genPagination(fetch[0].pagination[0], request.path + '?keyword=' + where),
